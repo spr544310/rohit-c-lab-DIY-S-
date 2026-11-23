@@ -1,0 +1,42 @@
+#include <iostream>
+#include <exception>
+using namespace std;
+
+class InsufficientFunds : public exception {
+public:
+    const char* what() const noexcept override {
+        return "Insufficient funds in account!";
+    }
+};
+
+class BankAccount {
+    double balance;
+
+public:
+    BankAccount(double b) {
+        balance = b;
+    }
+
+    void withdraw(double amount) {
+        if (amount > balance) {
+            throw InsufficientFunds();
+        }
+
+        balance -= amount;
+        cout << "Withdrawal successful!" << endl;
+        cout << "Remaining balance: " << balance << endl;
+    }
+};
+
+int main() {
+    BankAccount acc(5000);
+
+    try {
+        acc.withdraw(6000);
+    }
+    catch (InsufficientFunds &e) {
+        cout << "Exception: " << e.what() << endl;
+    }
+
+    return 0;
+}
